@@ -20,20 +20,32 @@ class MyClass
   include Memorable
 
   def my_method(*args)
-   args.reverse
+    puts ':my_method called'
+    args.reverse
   end
   memoize :my_method
 end
+
+instance = MyClass.new
+instance.my_method(1, 2, 3) 
+#=> :my_method called
+#=> [3, 2, 1]
+instance.my_method(100, 99)
+#=> :my_method called
+#=> [99, 100]
+instance.my_method(1, 2, 3)
+#=> [3, 2, 1]
 ```
 
 With a proc (use this in lieu of an instance method). The proc is evaluated in the
 instance's context, so any other instance methods are available within:
 
 ```ruby
-
 class MyClass
   include Memorable
-  memoize(:full_name) { |last_name| puts 'calling block...'; "#{first_name} #{last_name}" }
+  memoize(:full_name) do |last_name| 
+    "#{first_name} #{last_name}"
+  end
 
   def first_name
     'z'
@@ -57,7 +69,7 @@ This will be stored under the name of the method (in this case, :my_method):
 
 ```ruby
 def my_method(arg)
- memoize { [arg] }
+  memoize { [arg] }
 end
 ```
 
@@ -65,7 +77,7 @@ You can optionally supply a cache key (e.g., for values depending on arguments):
 
 ```ruby
 def my_method(arg)
- memoize([:my_method, arg]) { [arg] }
+  memoize([:my_method, arg]) { [arg] }
 end
 ```
 
@@ -93,7 +105,7 @@ And then execute:
 
 ## Contributing
 
-1. Fork it ( https://github.com/[my-github-username]/memorable/fork )
+1. Fork it ( https://github.com/zvkemp/memorable/fork )
 2. Create your feature branch (`git checkout -b my-new-feature`)
 3. Commit your changes (`git commit -am 'Add some feature'`)
 4. Push to the branch (`git push origin my-new-feature`)
