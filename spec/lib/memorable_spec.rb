@@ -68,11 +68,9 @@ describe Memorable do
         end
       end
 
-      specify do
-        instance.modified_uuid.must_include 'modified-'
-        instance.modified_uuid.must_equal instance.modified_uuid
-        instance.modified_uuid.wont_equal instance.uuid
-      end
+      specify { instance.modified_uuid.must_include 'modified-' }
+      specify { instance.modified_uuid.must_equal instance.modified_uuid }
+      specify { instance.modified_uuid.wont_equal instance.uuid }
     end
 
     describe 'memoize an existing method' do
@@ -88,10 +86,21 @@ describe Memorable do
         memoize :my_unique_method
       end
 
-      specify do
-        instance.my_unique_method.must_equal instance.my_unique_method
-        instance.my_unique_method.must_include 'unique-'
+      specify { instance.my_unique_method.must_equal instance.my_unique_method }
+      specify { instance.my_unique_method.must_include 'unique-'}
+    end
+
+    describe 'methods with arguments' do
+      class ClassyDumDum
+        def prepend_uuid(str)
+          "#{str}-#{SecureRandom.uuid}"
+        end
+
+        memoize :prepend_uuid
       end
+
+      specify { instance.prepend_uuid('hello').wont_equal instance.prepend_uuid('world') }
+      specify { instance.prepend_uuid('hello').must_equal instance.prepend_uuid('hello') }
     end
   end
 end

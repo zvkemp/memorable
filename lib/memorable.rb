@@ -5,7 +5,7 @@ module Memorable
       instance_eval do
         if block_given?
           define_method(sym) do |*args|
-            memoize(sym) { instance_exec(*args, &block) }
+            memoize(([sym] + args).freeze) { instance_exec(*args, &block) }
           end
         else
           old_method = :"_nm_#{sym}"
@@ -22,6 +22,8 @@ module Memorable
 
   private
 
+  # If the value alread exists, return it.
+  # Otherwise, execute the block, store the value, and return it.
   def memoize(sym = nil)
     sym ||= caller_locations.first.label.to_sym
     _memoized.fetch(sym) do |m|
