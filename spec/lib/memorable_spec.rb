@@ -1,5 +1,4 @@
 require_relative '../spec_helper'
-require 'rr'
 require 'securerandom'
 
 describe Memorable do
