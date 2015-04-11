@@ -1,4 +1,6 @@
 require 'memorable/version'
+require 'memorable/store'
+
 module Memorable
   module ClassMethods
     def memoize(sym, &block)
@@ -39,6 +41,6 @@ module Memorable
   end
 
   def _memoized
-    @_memoized ||= {}
+    @_memoized ||= Memorable::Store.new
   end
 end
