@@ -42,6 +42,17 @@ describe Memorable do
       instance.uuid.must_equal uuid
       original.wont_equal instance.uuid
     end
+
+    describe 'methods with arguments' do
+      class DumDum
+        def prepend_uuid(str)
+          memoize([:prepend_uuid, str]) { "#{str}-#{SecureRandom.uuid}" }
+        end
+      end
+
+      specify { instance.prepend_uuid('hello').wont_equal instance.prepend_uuid('world') }
+      specify { instance.prepend_uuid('hello').must_equal instance.prepend_uuid('hello') }
+    end
   end
 
   describe 'class methods' do
@@ -71,6 +82,15 @@ describe Memorable do
       specify { instance.modified_uuid.must_include 'modified-' }
       specify { instance.modified_uuid.must_equal instance.modified_uuid }
       specify { instance.modified_uuid.wont_equal instance.uuid }
+    end
+
+    describe 'a proc with arguments' do
+      class ClassyDumDum
+        memoize(:prepend_with_proc) { |str| "#{str}-#{SecureRandom.uuid}" }
+      end
+
+      specify { instance.prepend_with_proc('proc').must_equal instance.prepend_with_proc('proc') }
+      specify { instance.prepend_with_proc('proc').wont_equal instance.prepend_with_proc('lambda') }
     end
 
     describe 'memoize an existing method' do

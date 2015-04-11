@@ -12,7 +12,7 @@ module Memorable
         else
           old_method = :"_nm_#{sym}"
           alias_method old_method, sym
-          memoize(sym) {|*args| send(old_method, *args) }
+          memoize(sym) { |*args| send(old_method, *args) }
         end
       end
     end
@@ -26,21 +26,21 @@ module Memorable
 
   # If the value alread exists, return it.
   # Otherwise, execute the block, store the value, and return it.
-  def memoize(sym = nil)
-    sym ||= caller_locations.first.label.to_sym
-    _memoized.fetch(sym) do |m|
+  def memoize(key = nil)
+    key ||= caller_locations.first.label.to_sym
+    _memoized.fetch(key) do |m|
       _memoized[m] = yield
     end
   end
 
   # Execute the block and store the value even if it already exists.
   # Useful for writer methods.
-  def memoize!(sym = nil)
-    sym ||= caller_locations.first.label.to_sym
-    _memoized[sym] = yield
+  def memoize!(key = nil)
+    key ||= caller_locations.first.label.to_sym
+    _memoized[key] = yield
   end
 
   def _memoized
-    @_memoized ||= Memorable::Store.new
+    @_memoized ||= {} 
   end
 end
