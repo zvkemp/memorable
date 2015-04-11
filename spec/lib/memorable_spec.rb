@@ -32,6 +32,31 @@ describe Memorable do
     end
   end
 
+  describe 'falsey values' do
+    class DumDum
+      def store_falsey
+        memoize do
+          increment_counter
+          false
+        end
+      end
+
+      def increment_counter
+        @counter ||= 0
+        @counter += 1
+      end
+
+      attr_reader :counter
+    end
+
+    specify 'falsey values are cached' do
+      instance.store_falsey.must_equal false
+      instance.counter.must_equal 1
+      instance.store_falsey.must_equal false
+      instance.counter.must_equal 1
+    end
+  end
+
   describe 'writers' do
     let(:uuid) { SecureRandom.uuid }
     
