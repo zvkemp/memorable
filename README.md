@@ -1,5 +1,7 @@
 # Memorable
 
+[![Build Status](https://travis-ci.org/zvkemp/memorable.svg)](https://travis-ci.org/zvkemp/memorable)
+
 Provides an easy means to memoize expensive-to-compute values. Unlike the standard `@value ||= do_something...`,
 Memorable can save and retrieve `nil` and `false` values.
 
